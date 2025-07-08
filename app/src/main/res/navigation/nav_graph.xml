@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.dormapp.LoginFragment"
+        android:label="로그인">
+        <action
+            android:id="@+id/action_login_to_main"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_login_to_signup"
+            app:destination="@id/signupFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.dormapp.MainFragment"
+        android:label="메인페이지">
+        <action
+            android:id="@+id/action_mainFragment_to_dormFragment"
+            app:destination="@id/dormFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_sleepoverFragment"
+            app:destination="@id/sleepoverFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_noticeFragment"
+            app:destination="@id/noticeFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_postListFragment"
+            app:destination="@id/postListFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_inquiryListFragment"
+            app:destination="@id/inquiryListFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/myPageFragment"
+        android:name="com.example.dormapp.MyPageFragment"
+        android:label="마이페이지">
+
+        <action
+            android:id="@+id/action_myPageFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+
+        <action
+            android:id="@+id/action_myPageFragment_to_inquiryListFragment"
+            app:destination="@id/inquiryListFragment" />
+
+        <action
+            android:id="@+id/action_myPageFragment_to_givePointFragment"
+            app:destination="@id/givePointFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.example.dormapp.SignupFragment"
+        android:label="회원가입">
+        <action
+            android:id="@+id/action_signup_to_login"
+            app:destination="@id/loginFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/dormFragment"
+        android:name="com.example.dormapp.DormFragment"
+        android:label="기숙사 신청">
+        <action
+            android:id="@+id/action_dormFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/sleepoverFragment"
+        android:name="com.example.dormapp.SleepoverFragment"
+        android:label="외박 신청">
+        <action
+            android:id="@+id/action_sleepoverFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/noticeFragment"
+        android:name="com.example.dormapp.NoticeFragment"
+        android:label="공지사항">
+        <action
+            android:id="@+id/action_noticeFragment_to_noticeCreateFragment"
+            app:destination="@id/noticeCreateFragment" />
+        <action
+            android:id="@+id/action_noticeFragment_to_noticeDetailFragment"
+            app:destination="@id/noticeDetailFragment" />
+        <action
+            android:id="@+id/action_noticeFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/noticeCreateFragment"
+        android:name="com.example.dormapp.NoticeCreateFragment"
+        android:label="새 공지 작성">
+        <action
+            android:id="@+id/action_noticeCreateFragment_to_noticeFragment"
+            app:destination="@id/noticeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/noticeDetailFragment"
+        android:name="com.example.dormapp.NoticeDetailFragment"
+        android:label="공지 상세">
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="content"
+            app:argType="string" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/postListFragment"
+        android:name="com.example.dormapp.PostListFragment"
+        android:label="자유게시판">
+        <action
+            android:id="@+id/action_postListFragment_to_postCreateFragment"
+            app:destination="@id/postCreateFragment" />
+        <action
+            android:id="@+id/action_postListFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+        <action
+            android:id="@+id/action_postListFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postCreateFragment"
+        android:name="com.example.dormapp.PostCreateFragment"
+        android:label="글 작성">
+        <action
+            android:id="@+id/action_postCreateFragment_to_postListFragment"
+            app:destination="@id/postListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="com.example.dormapp.PostDetailFragment"
+        android:label="게시글 상세">
+        <argument
+            android:name="postId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_postDetailFragment_to_postListFragment"
+            app:destination="@id/postListFragment" />
+        <action
+            android:id="@+id/action_postDetailFragment_to_postEditFragment"
+            app:destination="@id/postEditFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postEditFragment"
+        android:name="com.example.dormapp.PostEditFragment"
+        android:label="글 수정">
+        <argument
+            android:name="postId"
+            app:argType="integer" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="content"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_postEditFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+    </fragment>
+
+    <!-- 식단표 -->
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.example.dormapp.MenuFragment"
+        android:label="식단표">
+        <action
+            android:id="@+id/action_menuFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/inquiryListFragment"
+        android:name="com.example.dormapp.InquiryListFragment"
+        android:label="문의사항 목록">
+        <action
+            android:id="@+id/action_inquiryListFragment_to_inquiryWriteFragment"
+            app:destination="@id/inquiryWriteFragment" />
+        <action
+            android:id="@+id/action_inquiryListFragment_to_inquiryDetailFragment"
+            app:destination="@id/inquiryDetailFragment">
+            <argument android:name="inquiryId" app:argType="integer" />
+        </action>
+        <action
+            android:id="@+id/action_inquiryListFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/inquiryWriteFragment"
+        android:name="com.example.dormapp.InquiryWriteFragment"
+        android:label="문의사항 작성">
+        <action
+            android:id="@+id/action_inquiryWriteFragment_to_inquiryListFragment"
+            app:destination="@id/inquiryListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/inquiryDetailFragment"
+        android:name="com.example.dormapp.InquiryDetailFragment"
+        android:label="문의 상세">
+        <argument android:name="inquiryId" app:argType="integer" />
+        <action
+            android:id="@+id/action_inquiryDetailFragment_to_inquiryListFragment"
+            app:destination="@id/inquiryListFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/givePointFragment"
+        android:name="com.example.dormapp.GivePointFragment"
+        android:label="상점·벌점 관리">
+        <action
+            android:id="@+id/action_givePointFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment" />
+    </fragment>
+
+</navigation>
