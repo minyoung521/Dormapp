@@ -53,9 +53,9 @@ data class DormData(
     val student_number: String,
     val content: String,
     val gender: String,
-    val building_name: String,
-    val r_number: Int,
-    val position: Int,
+    val building_name: String?,
+    val r_number: Int?,
+    val position: Int?,
     val is_available: Boolean
 )
 
@@ -254,6 +254,25 @@ data class InquiryAnswerResponse(
     val error: String?
 )
 
+data class DormApplyListItem(
+    val id: Int,
+    val name: String,
+    val student_number: String,
+    val content: String,
+    val gender: String,
+    val building_name: String?,
+    val r_number: Int?,
+    val position: Int?,
+    val is_available: Boolean
+)
+
+data class DormApplyListResponse(
+    val success: Boolean,
+    val dorms: List<DormApplyListItem>?,
+    val error: String?
+)
+
+
 interface ApiService {
     @POST("api/login/")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
@@ -266,6 +285,20 @@ interface ApiService {
 
     @POST("api/outing_apply/")
     fun applyOuting(@Body request: OutingApplyRequest): Call<OutingApplyResponse>
+
+    @GET("api/dorm-applications/")
+    fun getDormApplyList(): Call<DormApplyListResponse>
+
+    @PATCH("api/dorm-applications/{id}/")
+    fun updateDormApply(
+        @Path("id") id: Int,
+        @Body params: Map<String, String>
+    ): Call<DormApplyResponse>
+
+    @DELETE("api/dorm-applications/{id}/")
+    fun deleteDormApply(
+        @Path("id") id: Int
+    ): Call<DeleteResponse>
 
     @GET("api/outing_apply/today/")
     fun outingListToday(): Call<OutingListResponse>

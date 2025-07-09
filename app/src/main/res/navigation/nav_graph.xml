@@ -5,7 +5,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
-
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.dormapp.LoginFragment"
@@ -17,7 +16,6 @@
             android:id="@+id/action_login_to_signup"
             app:destination="@id/signupFragment" />
     </fragment>
-
 
     <fragment
         android:id="@+id/mainFragment"
@@ -46,25 +44,20 @@
             app:destination="@id/myPageFragment" />
     </fragment>
 
-
     <fragment
         android:id="@+id/myPageFragment"
         android:name="com.example.dormapp.MyPageFragment"
         android:label="마이페이지">
-
         <action
             android:id="@+id/action_myPageFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
-
         <action
             android:id="@+id/action_myPageFragment_to_inquiryListFragment"
             app:destination="@id/inquiryListFragment" />
-
         <action
             android:id="@+id/action_myPageFragment_to_givePointFragment"
             app:destination="@id/givePointFragment" />
     </fragment>
-
 
     <fragment
         android:id="@+id/signupFragment"
@@ -75,7 +68,6 @@
             app:destination="@id/loginFragment" />
     </fragment>
 
-
     <fragment
         android:id="@+id/dormFragment"
         android:name="com.example.dormapp.DormFragment"
@@ -83,8 +75,19 @@
         <action
             android:id="@+id/action_dormFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_dormFragment_to_dormAdminFragment"
+            app:destination="@id/dormAdminFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/dormAdminFragment"
+        android:name="com.example.dormapp.DormAdminFragment"
+        android:label="신청자 관리">
+        <action
+            android:id="@+id/action_dormAdminFragment_to_dormFragment"
+            app:destination="@id/dormFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/sleepoverFragment"
@@ -94,7 +97,6 @@
             android:id="@+id/action_sleepoverFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
-
 
     <fragment
         android:id="@+id/noticeFragment"
@@ -110,6 +112,7 @@
             android:id="@+id/action_noticeFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/noticeCreateFragment"
         android:name="com.example.dormapp.NoticeCreateFragment"
@@ -118,6 +121,7 @@
             android:id="@+id/action_noticeCreateFragment_to_noticeFragment"
             app:destination="@id/noticeFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/noticeDetailFragment"
         android:name="com.example.dormapp.NoticeDetailFragment"
@@ -129,7 +133,6 @@
             android:name="content"
             app:argType="string" />
     </fragment>
-
 
     <fragment
         android:id="@+id/postListFragment"
@@ -145,6 +148,7 @@
             android:id="@+id/action_postListFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/postCreateFragment"
         android:name="com.example.dormapp.PostCreateFragment"
@@ -153,6 +157,7 @@
             android:id="@+id/action_postCreateFragment_to_postListFragment"
             app:destination="@id/postListFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/postDetailFragment"
         android:name="com.example.dormapp.PostDetailFragment"
@@ -167,6 +172,7 @@
             android:id="@+id/action_postDetailFragment_to_postEditFragment"
             app:destination="@id/postEditFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/postEditFragment"
         android:name="com.example.dormapp.PostEditFragment"
@@ -185,7 +191,6 @@
             app:destination="@id/postDetailFragment" />
     </fragment>
 
-    <!-- 식단표 -->
     <fragment
         android:id="@+id/menuFragment"
         android:name="com.example.dormapp.MenuFragment"
@@ -194,7 +199,6 @@
             android:id="@+id/action_menuFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
-
 
     <fragment
         android:id="@+id/inquiryListFragment"
@@ -212,6 +216,7 @@
             android:id="@+id/action_inquiryListFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/inquiryWriteFragment"
         android:name="com.example.dormapp.InquiryWriteFragment"
@@ -220,6 +225,7 @@
             android:id="@+id/action_inquiryWriteFragment_to_inquiryListFragment"
             app:destination="@id/inquiryListFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/inquiryDetailFragment"
         android:name="com.example.dormapp.InquiryDetailFragment"
@@ -229,7 +235,6 @@
             android:id="@+id/action_inquiryDetailFragment_to_inquiryListFragment"
             app:destination="@id/inquiryListFragment" />
     </fragment>
-
 
     <fragment
         android:id="@+id/givePointFragment"

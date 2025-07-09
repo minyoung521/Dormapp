@@ -37,20 +37,33 @@ class DormFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view        = inflater.inflate(R.layout.fragment_dorm, container, false)
-        val etUsername  = view.findViewById<EditText>(R.id.etUsername)
-        val etUsernum   = view.findViewById<EditText>(R.id.etUsernum)
+        val view = inflater.inflate(R.layout.fragment_dorm, container, false)
+        val etUsername = view.findViewById<EditText>(R.id.etUsername)
+        val etUsernum = view.findViewById<EditText>(R.id.etUsernum)
         val genderGroup = view.findViewById<RadioGroup>(R.id.genderGroup)
-        val etContent   = view.findViewById<EditText>(R.id.dormContent)
-        val btnApply    = view.findViewById<Button>(R.id.btnApply)
+        val etContent = view.findViewById<EditText>(R.id.dormContent)
+        val btnApply = view.findViewById<Button>(R.id.btnApply)
+        val btnAdminDormList = view.findViewById<Button>(R.id.btnAdminDormList)
+
+        val prefs = requireContext().getSharedPreferences("prefs", 0)
+        val isAdmin = prefs.getBoolean("is_staff", false)
+        if (isAdmin) {
+            btnAdminDormList.visibility = View.VISIBLE
+        } else {
+            btnAdminDormList.visibility = View.GONE
+        }
+
+        btnAdminDormList.setOnClickListener {
+            findNavController().navigate(R.id.action_dormFragment_to_dormAdminFragment)
+        }
 
         btnApply.setOnClickListener {
-            val name        = etUsername.text.toString().trim()
-            val studentNum  = etUsernum.text.toString().trim()
-            val gender      = when (genderGroup.checkedRadioButtonId) {
-                R.id.radioMale   -> "male"
+            val name = etUsername.text.toString().trim()
+            val studentNum = etUsernum.text.toString().trim()
+            val gender = when (genderGroup.checkedRadioButtonId) {
+                R.id.radioMale -> "male"
                 R.id.radioFemale -> "female"
-                else             -> ""
+                else -> ""
             }
             val contentText = etContent.text.toString().trim()
 
@@ -60,10 +73,10 @@ class DormFragment : Fragment() {
             }
 
             val request = DormApplyRequest(
-                name           = name,
+                name = name,
                 student_number = studentNum,
-                gender         = gender,
-                content        = contentText
+                gender = gender,
+                content = contentText
             )
 
             RetrofitClient.create(requireContext())
