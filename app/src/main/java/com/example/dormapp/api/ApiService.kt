@@ -272,90 +272,68 @@ data class DormApplyListResponse(
     val error: String?
 )
 
+data class SleepOverStatus(
+    val id: Int,
+    val student_number: String,
+    val name: String,
+    val out_date: String,
+    @SerializedName("applied_at") val appliedAt: String,
+    val status: String
+)
+
+data class SleepOverStatusResponse(
+    val success: Boolean,
+    val list: List<SleepOverStatus>?
+)
 
 interface ApiService {
-    @POST("api/login/")
-    fun login(@Body request: LoginRequest): Call<LoginResponse>
+    @POST("api/login/")       fun login(@Body request: LoginRequest): Call<LoginResponse>
+    @POST("api/signup/")      fun signup(@Body request: SignupRequest): Call<SignupResponse>
 
-    @POST("api/signup/")
-    fun signup(@Body request: SignupRequest): Call<SignupResponse>
-
-    @POST("api/dorm_apply/")
-    fun applyDorm(@Body request: DormApplyRequest): Call<DormApplyResponse>
-
-    @POST("api/outing_apply/")
-    fun applyOuting(@Body request: OutingApplyRequest): Call<OutingApplyResponse>
-
-    @GET("api/dorm-applications/")
-    fun getDormApplyList(): Call<DormApplyListResponse>
-
-    @PATCH("api/dorm-applications/{id}/")
-    fun updateDormApply(
+    @POST("api/dorm_apply/")  fun applyDorm(@Body request: DormApplyRequest): Call<DormApplyResponse>
+    @GET ("api/dorm-applications/") fun getDormApplyList(): Call<DormApplyListResponse>
+    @PATCH("api/dorm-applications/{id}/") fun updateDormApply(
         @Path("id") id: Int,
         @Body params: Map<String, String>
     ): Call<DormApplyResponse>
+    @DELETE("api/dorm-applications/{id}/") fun deleteDormApply(@Path("id") id: Int): Call<DeleteResponse>
 
-    @DELETE("api/dorm-applications/{id}/")
-    fun deleteDormApply(
-        @Path("id") id: Int
-    ): Call<DeleteResponse>
+    @POST("api/outing_apply/")     fun applyOuting(@Body request: OutingApplyRequest): Call<OutingApplyResponse>
 
-    @GET("api/outing_apply/today/")
-    fun outingListToday(): Call<OutingListResponse>
+    @GET("api/outing_apply/today/") fun outingListToday(): Call<OutingListResponse>
 
-    @GET("api/notices/")
-    fun getNotices(): Call<NoticeListResponse>
+    @GET("api/notices/")       fun getNotices(): Call<NoticeListResponse>
+    @POST("api/notices/")      fun addNotice(@Body request: NoticeCreateRequest): Call<NoticeCreateResponse>
 
-    @POST("api/notices/")
-    fun addNotice(@Body request: NoticeCreateRequest): Call<NoticeCreateResponse>
-
-    @GET("api/posts/")
-    fun getPosts(): Call<PostListResponse>
-
-    @GET("api/posts/{id}/")
-    fun getPost(@Path("id") postId: Int): Call<PostDetailResponse>
-
-    @POST("api/posts/")
-    fun addPost(@Body request: PostRequest): Call<PostCreateResponse>
-
-    @PUT("api/posts/{id}/")
-    fun updatePost(@Path("id") postId: Int, @Body request: PostRequest): Call<PostCreateResponse>
-
-    @DELETE("api/posts/{id}/")
-    fun deletePost(@Path("id") postId: Int): Call<DeleteResponse>
-
+    @GET("api/posts/")          fun getPosts(): Call<PostListResponse>
+    @GET("api/posts/{id}/")     fun getPost(@Path("id") postId: Int): Call<PostDetailResponse>
+    @POST("api/posts/")         fun addPost(@Body request: PostRequest): Call<PostCreateResponse>
+    @PUT("api/posts/{id}/")     fun updatePost(@Path("id") postId: Int, @Body request: PostRequest): Call<PostCreateResponse>
+    @DELETE("api/posts/{id}/")  fun deletePost(@Path("id") postId: Int): Call<DeleteResponse>
     @Multipart
-    @POST("api/posts/")
-    fun addPostWithImage(
+    @POST("api/posts/") fun addPostWithImage(
         @Part("title") title: RequestBody,
         @Part("content") content: RequestBody,
         @Part image: MultipartBody.Part?
     ): Call<PostCreateResponse>
 
-    @POST("api/posts/{id}/comments/")
-    fun addComment(@Path("id") postId: Int, @Body body: Map<String, String>): Call<CommentResponse>
+    @POST("api/posts/{id}/comments/") fun addComment(@Path("id") postId: Int, @Body body: Map<String, String>): Call<CommentResponse>
+    @GET("api/posts/{id}/comments/")  fun getComments(@Path("id") postId: Int): Call<CommentListResponse>
 
-    @GET("api/posts/{id}/comments/")
-    fun getComments(@Path("id") postId: Int): Call<CommentListResponse>
+    @GET("api/mypage/")        fun getMyPage(): Call<MyPageResponse>
+    @POST("api/give_point/")   fun givePoint(@Body request: GivePointRequest): Call<GivePointResponse>
 
-    @GET("api/mypage/")
-    fun getMyPage(): Call<MyPageResponse>
+    @GET("api/inquiries/")     fun getInquiries(): Call<InquiryListResponse>
+    @POST("api/inquiries/")    fun createInquiry(@Body request: InquiryCreateRequest): Call<InquiryCreateResponse>
+    @GET("api/inquiries/{id}/")fun getInquiryDetail(@Path("id") id: Int): Call<InquiryDetailResponse>
+    @POST("api/inquiries/{id}/")fun answerInquiry(@Path("id") id: Int, @Body request: InquiryAnswerRequest): Call<InquiryAnswerResponse>
 
-    @POST("api/give_point/")
-    fun givePoint(@Body request: GivePointRequest): Call<GivePointResponse>
+    @GET("api/sleepover/status/") fun getSleepOverStatus(): Call<SleepOverStatusResponse>
 
-    @GET("api/inquiries/")
-    fun getInquiries(): Call<InquiryListResponse>
+    // ─── 여기부터 승인/거절 API ────────────────────────────────────
+    @POST("api/sleepover/approve/{id}/")
+    fun approveOuting(@Path("id") id: Int): Call<OutingApplyResponse>
 
-    @POST("api/inquiries/")
-    fun createInquiry(@Body request: InquiryCreateRequest): Call<InquiryCreateResponse>
-
-    @GET("api/inquiries/{id}/")
-    fun getInquiryDetail(@Path("id") inquiryId: Int): Call<InquiryDetailResponse>
-
-    @POST("api/inquiries/{id}/")
-    fun answerInquiry(
-        @Path("id") inquiryId: Int,
-        @Body request: InquiryAnswerRequest
-    ): Call<InquiryAnswerResponse>
+    @POST("api/sleepover/reject/{id}/")
+    fun rejectOuting(@Path("id") id: Int): Call<DeleteResponse>
 }

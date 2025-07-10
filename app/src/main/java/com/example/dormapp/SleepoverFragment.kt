@@ -1,6 +1,7 @@
 package com.example.dormapp
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -25,6 +26,11 @@ class SleepoverFragment : Fragment(R.layout.fragment_sleepover) {
         val etStudentNum = view.findViewById<EditText>(R.id.etStudentNum)
         val etOutDate    = view.findViewById<EditText>(R.id.etOutDate)
         val btnApply     = view.findViewById<Button>(R.id.btnApplyOuting)
+        val btnStatus    = view.findViewById<Button>(R.id.btnOutingStatus)
+
+        val prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        val isStaff = prefs.getBoolean("is_staff", false)
+        btnStatus.visibility = View.VISIBLE
 
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -82,6 +88,10 @@ class SleepoverFragment : Fragment(R.layout.fragment_sleepover) {
                     Toast.makeText(requireContext(), "네트워크 오류: ${t.localizedMessage}", Toast.LENGTH_SHORT).show()
                 }
             })
+        }
+
+        btnStatus.setOnClickListener {
+            findNavController().navigate(R.id.action_sleepoverFragment_to_sleepOverStatusFragment)
         }
     }
 }

@@ -96,7 +96,15 @@
         <action
             android:id="@+id/action_sleepoverFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_sleepoverFragment_to_sleepOverStatusFragment"
+            app:destination="@id/sleepOverStatusFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/sleepOverStatusFragment"
+        android:name="com.example.dormapp.SleepOverStatusFragment"
+        android:label="외박신청 현황" />
 
     <fragment
         android:id="@+id/noticeFragment"
