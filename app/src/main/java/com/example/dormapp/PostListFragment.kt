@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
 import com.example.dormapp.adapter.PostAdapter
+import com.example.dormapp.api.LikeResponse
 import com.example.dormapp.api.PostData
 import com.example.dormapp.api.PostListResponse
 import com.example.dormapp.api.RetrofitClient
@@ -16,7 +18,6 @@ import com.example.dormapp.databinding.FragmentPostListBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import androidx.navigation.fragment.findNavController
 
 class PostListFragment : Fragment() {
 
@@ -35,10 +36,49 @@ class PostListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = PostAdapter(items) { post ->
-            val action = PostListFragmentDirections.actionPostListFragmentToPostDetailFragment(post.id)
-            findNavController().navigate(action)
-        }
+        adapter = PostAdapter(
+            items,
+            onClick = { post ->
+                val action =
+                    PostListFragmentDirections.actionPostListFragmentToPostDetailFragment(post.id)
+                findNavController().navigate(action)
+            },
+            onLikeClick = { post, pos ->
+                RetrofitClient.create(requireContext())
+                    .toggleLike(post.id)
+                    .enqueue(object : Callback<LikeResponse> {
+                        override fun onResponse(
+                            call: Call<LikeResponse>,
+                            response: Response<LikeResponse>
+                        ) {
+                            if (response.isSuccessful) {
+                                response.body()?.let { body ->
+                                    val updated = post.copy(
+                                        isLiked = body.isLiked,
+                                        likeCount = body.likeCount
+                                    )
+                                    items[pos] = updated
+                                    adapter.notifyItemChanged(pos)
+                                }
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "좋아요 처리 실패",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<LikeResponse>, t: Throwable) {
+                            Toast.makeText(
+                                requireContext(),
+                                "네트워크 에러: ${t.localizedMessage}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
+            }
+        )
         binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
         binding.rvPosts.adapter = adapter
 
@@ -59,14 +99,20 @@ class PostListFragment : Fragment() {
                     if (response.isSuccessful && response.body()?.success == true) {
                         val posts = response.body()?.posts ?: emptyList()
                         Log.d("PostList", "posts.size = ${posts.size}")
-                        adapter.updateList(posts)
+                        items.clear()
+                        items.addAll(posts)
+                        adapter.notifyDataSetChanged()
                     } else {
                         Toast.makeText(requireContext(), "불러오기 실패", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onFailure(call: Call<PostListResponse>, t: Throwable) {
-                    Toast.makeText(requireContext(), "네트워크 에러: ${t.localizedMessage}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "네트워크 에러: ${t.localizedMessage}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
     }

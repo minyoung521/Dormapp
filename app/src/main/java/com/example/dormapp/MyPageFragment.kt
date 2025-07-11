@@ -21,13 +21,16 @@ class MyPageFragment : Fragment(R.layout.fragment_mypage) {
         val tvName         = view.findViewById<TextView>(R.id.tvName)
         val tvStudentNum   = view.findViewById<TextView>(R.id.tvStudentNumber)
         val tvDepartment   = view.findViewById<TextView>(R.id.tvDepartment)
+        val tvPhoneNumber  = view.findViewById<TextView>(R.id.tvPhoneNumber)
         val tvRewardPoint  = view.findViewById<TextView>(R.id.tvRewardPoint)
         val tvPenaltyPoint = view.findViewById<TextView>(R.id.tvPenaltyPoint)
         val tvDorm         = view.findViewById<TextView>(R.id.tvDorm)
         val btnScoreAdmin  = view.findViewById<Button>(R.id.btnScoreAdmin)
         val btnInquiry     = view.findViewById<Button>(R.id.btnInquiry)
+        val btnUserSearch  = view.findViewById<Button>(R.id.btnUserSearch)
 
         btnScoreAdmin.visibility = View.GONE
+        btnUserSearch.visibility = View.GONE
 
         val prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE)
         val token = prefs.getString("auth_token", null)
@@ -45,18 +48,20 @@ class MyPageFragment : Fragment(R.layout.fragment_mypage) {
                         tvName.text         = "이름: ${data.user.fullName ?: data.user.username}"
                         tvStudentNum.text   = "학번: ${data.user.username}"
                         tvDepartment.text   = "학과: ${data.user.department}"
+                        tvPhoneNumber.text  = "전화번호: ${data.user.phoneNumber ?: "-"}"
                         tvRewardPoint.text  = "상점: ${data.user.rewardPoint}"
                         tvPenaltyPoint.text = "벌점: ${data.user.penaltyPoint}"
                         val dormInfo = data.dorm
-                            ?.let { "${it.building_name} ${it.r_number}호 (좌석: ${it.position})" }
+                            ?.let { "${it.building_name} ${it.r_number}호" }
                             ?: "미신청"
                         tvDorm.text = "관/호실: $dormInfo"
 
                         if (data.user.isStaff || data.user.isSuperuser) {
                             btnScoreAdmin.visibility = View.VISIBLE
+                            btnUserSearch.visibility = View.VISIBLE
                         }
                     } else {
-                        Toast.makeText(requireContext(), "정보 불러오기 실패", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "정보 불러오기 실패.", Toast.LENGTH_SHORT).show()
                     }
                 }
                 override fun onFailure(call: Call<MyPageResponse>, t: Throwable) {
@@ -65,14 +70,13 @@ class MyPageFragment : Fragment(R.layout.fragment_mypage) {
             })
 
         btnInquiry.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_myPageFragment_to_inquiryListFragment
-            )
+            findNavController().navigate(R.id.action_myPageFragment_to_inquiryListFragment)
         }
         btnScoreAdmin.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_myPageFragment_to_givePointFragment
-            )
+            findNavController().navigate(R.id.action_myPageFragment_to_givePointFragment)
+        }
+        btnUserSearch.setOnClickListener {
+            findNavController().navigate(R.id.action_myPageFragment_to_userSearchFragment)
         }
     }
 }

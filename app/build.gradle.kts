@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.kotlin.compose)
     id("androidx.navigation.safeargs.kotlin")
 }
@@ -44,6 +45,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
     }
+    sourceSets["main"].res.srcDirs("src/main/res", "src/main/res/xml")
 }
 
 dependencies {
@@ -56,6 +58,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
+    // Retrofit / OkHttp
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
@@ -66,13 +69,12 @@ dependencies {
 
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("com.google.android.material:material:1.8.0")
+
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
 
     testImplementation(libs.junit)
-
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
     debugImplementation(libs.androidx.ui.tooling)
-
 }

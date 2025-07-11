@@ -25,12 +25,14 @@ data class SignupRequest(
     val password: String,
     val email: String,
     val department: String,
-    @SerializedName("full_name") val fullName: String
+    @SerializedName("full_name") val fullName: String,
+    @SerializedName("phone_number") val phoneNumber: String
 )
 
 data class SignupResponse(
     val success: Boolean,
     @SerializedName("user_id") val userId: Int?,
+    @SerializedName("phone_number") val phoneNumber: String?,
     val error: String?
 )
 
@@ -89,6 +91,7 @@ data class NoticeData(
     val id: Int,
     val title: String,
     val content: String,
+    @SerializedName("image") val imageUrl: String?,
     val date: String
 )
 
@@ -138,7 +141,9 @@ data class PostData(
     @SerializedName("created_at") val createdAt: String,
     @SerializedName("updated_at") val updatedAt: String,
     @SerializedName("image") val imageUrl: String?,
-    @SerializedName("comments") val comments: List<CommentData>?
+    @SerializedName("comments") val comments: List<CommentData>?,
+    @SerializedName("like_count") val likeCount: Int,
+    @SerializedName("is_liked") val isLiked: Boolean
 )
 
 data class PostListResponse(
@@ -175,6 +180,7 @@ data class UserProfileData(
     val email: String,
     val department: String,
     @SerializedName("full_name") val fullName: String?,
+    @SerializedName("phone_number") val phoneNumber: String?,
     @SerializedName("reward_point") val rewardPoint: Int,
     @SerializedName("penalty_point") val penaltyPoint: Int,
     @SerializedName("is_staff") val isStaff: Boolean,
@@ -286,30 +292,74 @@ data class SleepOverStatusResponse(
     val list: List<SleepOverStatus>?
 )
 
-interface ApiService {
-    @POST("api/login/")       fun login(@Body request: LoginRequest): Call<LoginResponse>
-    @POST("api/signup/")      fun signup(@Body request: SignupRequest): Call<SignupResponse>
+data class LikeResponse(
+    @SerializedName("is_liked") val isLiked: Boolean,
+    @SerializedName("like_count") val likeCount: Int
+)
 
-    @POST("api/dorm_apply/")  fun applyDorm(@Body request: DormApplyRequest): Call<DormApplyResponse>
-    @GET ("api/dorm-applications/") fun getDormApplyList(): Call<DormApplyListResponse>
+data class UserSearchData(
+    val id: Int,
+    @SerializedName("fullName") val fullName: String,
+    @SerializedName("studentNumber") val studentNumber: String,
+    val department: String
+)
+
+data class UserSearchListResponse(
+    val success: Boolean,
+    val users: List<UserSearchData>?,
+    val error: String?
+)
+
+
+data class AdminUserDetail(
+    val id: Int,
+    @SerializedName("full_name") val fullName: String,
+    @SerializedName("student_number") val studentNumber: String,
+    val department: String,
+    @SerializedName("phone_number") val phoneNumber: String,
+    @SerializedName("reward_point") val rewardPoint: Int,
+    @SerializedName("penalty_point") val penaltyPoint: Int,
+    @SerializedName("building_name") val buildingName: String,
+    @SerializedName("r_number") val rNumber: Int
+)
+
+data class AdminUserDetailResponse(
+    val success: Boolean,
+    val user: AdminUserDetail?,
+    val message: String?,
+    val error: String?
+)
+
+interface ApiService {
+    @POST("api/login/") fun login(@Body request: LoginRequest): Call<LoginResponse>
+    @POST("api/signup/") fun signup(@Body request: SignupRequest): Call<SignupResponse>
+
+    @POST("api/dorm_apply/") fun applyDorm(@Body request: DormApplyRequest): Call<DormApplyResponse>
+    @GET("api/dorm-applications/") fun getDormApplyList(): Call<DormApplyListResponse>
     @PATCH("api/dorm-applications/{id}/") fun updateDormApply(
         @Path("id") id: Int,
         @Body params: Map<String, String>
     ): Call<DormApplyResponse>
     @DELETE("api/dorm-applications/{id}/") fun deleteDormApply(@Path("id") id: Int): Call<DeleteResponse>
 
-    @POST("api/outing_apply/")     fun applyOuting(@Body request: OutingApplyRequest): Call<OutingApplyResponse>
-
+    @POST("api/outing_apply/") fun applyOuting(@Body request: OutingApplyRequest): Call<OutingApplyResponse>
     @GET("api/outing_apply/today/") fun outingListToday(): Call<OutingListResponse>
 
-    @GET("api/notices/")       fun getNotices(): Call<NoticeListResponse>
-    @POST("api/notices/")      fun addNotice(@Body request: NoticeCreateRequest): Call<NoticeCreateResponse>
+    @GET("api/notices/") fun getNotices(): Call<NoticeListResponse>
 
-    @GET("api/posts/")          fun getPosts(): Call<PostListResponse>
-    @GET("api/posts/{id}/")     fun getPost(@Path("id") postId: Int): Call<PostDetailResponse>
-    @POST("api/posts/")         fun addPost(@Body request: PostRequest): Call<PostCreateResponse>
-    @PUT("api/posts/{id}/")     fun updatePost(@Path("id") postId: Int, @Body request: PostRequest): Call<PostCreateResponse>
-    @DELETE("api/posts/{id}/")  fun deletePost(@Path("id") postId: Int): Call<DeleteResponse>
+    @Multipart
+    @POST("api/notices/")
+    fun addNoticeWithImage(
+        @Part("title") title: RequestBody,
+        @Part("content") content: RequestBody,
+        @Part image: MultipartBody.Part?
+    ): Call<NoticeCreateResponse>
+
+    @GET("api/posts/") fun getPosts(): Call<PostListResponse>
+    @GET("api/posts/{id}/") fun getPost(@Path("id") postId: Int): Call<PostDetailResponse>
+    @POST("api/posts/") fun addPost(@Body request: PostRequest): Call<PostCreateResponse>
+    @PUT("api/posts/{id}/") fun updatePost(@Path("id") postId: Int, @Body request: PostRequest): Call<PostCreateResponse>
+    @DELETE("api/posts/{id}/") fun deletePost(@Path("id") postId: Int): Call<DeleteResponse>
     @Multipart
     @POST("api/posts/") fun addPostWithImage(
         @Part("title") title: RequestBody,
@@ -318,22 +368,37 @@ interface ApiService {
     ): Call<PostCreateResponse>
 
     @POST("api/posts/{id}/comments/") fun addComment(@Path("id") postId: Int, @Body body: Map<String, String>): Call<CommentResponse>
-    @GET("api/posts/{id}/comments/")  fun getComments(@Path("id") postId: Int): Call<CommentListResponse>
+    @GET("api/posts/{id}/comments/") fun getComments(@Path("id") postId: Int): Call<CommentListResponse>
 
-    @GET("api/mypage/")        fun getMyPage(): Call<MyPageResponse>
-    @POST("api/give_point/")   fun givePoint(@Body request: GivePointRequest): Call<GivePointResponse>
+    @POST("api/posts/{id}/like/") fun toggleLike(@Path("id") id: Int): Call<LikeResponse>
 
-    @GET("api/inquiries/")     fun getInquiries(): Call<InquiryListResponse>
-    @POST("api/inquiries/")    fun createInquiry(@Body request: InquiryCreateRequest): Call<InquiryCreateResponse>
-    @GET("api/inquiries/{id}/")fun getInquiryDetail(@Path("id") id: Int): Call<InquiryDetailResponse>
-    @POST("api/inquiries/{id}/")fun answerInquiry(@Path("id") id: Int, @Body request: InquiryAnswerRequest): Call<InquiryAnswerResponse>
+    @GET("api/mypage/") fun getMyPage(): Call<MyPageResponse>
+    @POST("api/give_point/") fun givePoint(@Body request: GivePointRequest): Call<GivePointResponse>
+
+    @GET("api/inquiries/") fun getInquiries(): Call<InquiryListResponse>
+    @POST("api/inquiries/") fun createInquiry(@Body request: InquiryCreateRequest): Call<InquiryCreateResponse>
+    @GET("api/inquiries/{id}/") fun getInquiryDetail(@Path("id") id: Int): Call<InquiryDetailResponse>
+    @POST("api/inquiries/{id}/") fun answerInquiry(@Path("id") id: Int, @Body request: InquiryAnswerRequest): Call<InquiryAnswerResponse>
 
     @GET("api/sleepover/status/") fun getSleepOverStatus(): Call<SleepOverStatusResponse>
+    @POST("api/sleepover/approve/{id}/") fun approveOuting(@Path("id") id: Int): Call<OutingApplyResponse>
+    @POST("api/sleepover/reject/{id}/") fun rejectOuting(@Path("id") id: Int): Call<DeleteResponse>
 
-    // ─── 여기부터 승인/거절 API ────────────────────────────────────
-    @POST("api/sleepover/approve/{id}/")
-    fun approveOuting(@Path("id") id: Int): Call<OutingApplyResponse>
+    @GET("api/admin/user-search/")
+    fun searchUser(
+        @Query("student_number") studentNumber: String
+    ): Call<UserSearchListResponse>
 
-    @POST("api/sleepover/reject/{id}/")
-    fun rejectOuting(@Path("id") id: Int): Call<DeleteResponse>
+    @GET("api/admin/user/{user_id}/")
+    fun getAdminUserDetail(@Path("user_id") userId: Int): Call<AdminUserDetailResponse>
+
+    @PATCH("api/admin/user/{user_id}/")
+    fun updateAdminUser(
+        @Path("user_id") userId: Int,
+        @Body params: Map<String, @JvmSuppressWildcards Any>
+    ): Call<AdminUserDetailResponse>
+
+    @DELETE("api/admin/user/{user_id}/")
+    fun deleteAdminUser(@Path("user_id") userId: Int): Call<DeleteResponse>
+
 }

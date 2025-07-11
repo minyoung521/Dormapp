@@ -16,7 +16,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -27,7 +26,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         btnLogin.setOnClickListener {
             val username = etUsername.text.toString().trim()
-            val password = etPassword.text.toString()
+            val password = etPassword.text.toString().trim()
 
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(requireContext(), "아이디와 비밀번호를 모두 입력하세요", Toast.LENGTH_SHORT).show()
@@ -50,18 +49,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                 .apply()
                             findNavController().navigate(R.id.action_login_to_main)
                         } else {
-                            Toast.makeText(requireContext(),
-                                body?.error ?: "로그인 실패 (${response.code()})",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(requireContext(), "로그인 정보가 맞지 않습니다", Toast.LENGTH_SHORT).show()
                         }
                     }
 
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                        Toast.makeText(requireContext(),
-                            "네트워크 에러: ${t.localizedMessage}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(requireContext(), "네트워크 에러: ${t.localizedMessage}", Toast.LENGTH_SHORT).show()
                     }
                 })
         }

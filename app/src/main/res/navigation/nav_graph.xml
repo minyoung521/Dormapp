@@ -57,6 +57,18 @@
         <action
             android:id="@+id/action_myPageFragment_to_givePointFragment"
             app:destination="@id/givePointFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_userSearchFragment"
+            app:destination="@id/userSearchFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userSearchFragment"
+        android:name="com.example.dormapp.UserSearchFragment"
+        android:label="회원 검색">
+        <action
+            android:id="@+id/action_userSearchFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment" />
     </fragment>
 
     <fragment
@@ -111,23 +123,11 @@
         android:name="com.example.dormapp.NoticeFragment"
         android:label="공지사항">
         <action
-            android:id="@+id/action_noticeFragment_to_noticeCreateFragment"
-            app:destination="@id/noticeCreateFragment" />
-        <action
             android:id="@+id/action_noticeFragment_to_noticeDetailFragment"
             app:destination="@id/noticeDetailFragment" />
         <action
             android:id="@+id/action_noticeFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/noticeCreateFragment"
-        android:name="com.example.dormapp.NoticeCreateFragment"
-        android:label="새 공지 작성">
-        <action
-            android:id="@+id/action_noticeCreateFragment_to_noticeFragment"
-            app:destination="@id/noticeFragment" />
     </fragment>
 
     <fragment
@@ -140,6 +140,10 @@
         <argument
             android:name="content"
             app:argType="string" />
+        <argument
+            android:name="imageUrl"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
 
     <fragment
@@ -218,7 +222,9 @@
         <action
             android:id="@+id/action_inquiryListFragment_to_inquiryDetailFragment"
             app:destination="@id/inquiryDetailFragment">
-            <argument android:name="inquiryId" app:argType="integer" />
+            <argument
+                android:name="inquiryId"
+                app:argType="integer" />
         </action>
         <action
             android:id="@+id/action_inquiryListFragment_to_mainFragment"
@@ -238,7 +244,9 @@
         android:id="@+id/inquiryDetailFragment"
         android:name="com.example.dormapp.InquiryDetailFragment"
         android:label="문의 상세">
-        <argument android:name="inquiryId" app:argType="integer" />
+        <argument
+            android:name="inquiryId"
+            app:argType="integer" />
         <action
             android:id="@+id/action_inquiryDetailFragment_to_inquiryListFragment"
             app:destination="@id/inquiryListFragment" />

@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="24dp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/etDetailName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="이름" />
+
+    <EditText
+        android:id="@+id/etDetailStudentNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="학번" />
+
+    <EditText
+        android:id="@+id/etDetailDepartment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="학과" />
+
+    <EditText
+        android:id="@+id/etDetailPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="전화번호" />
+
+    <EditText
+        android:id="@+id/etDetailReward"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="상점" />
+
+    <EditText
+        android:id="@+id/etDetailPenalty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="벌점" />
+
+    <TextView
+        android:id="@+id/tvDetailDorm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="관/호실"
+        android:paddingTop="8dp"/>
+</LinearLayout>
