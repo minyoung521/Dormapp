@@ -1,5 +1,7 @@
 package com.example.dormapp
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -31,8 +33,15 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         view.findViewById<LinearLayout>(R.id.btnMenu).setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_menuFragment)
         }
+
         view.findViewById<LinearLayout>(R.id.btnMyPage).setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_myPageFragment)
+        }
+
+        view.findViewById<LinearLayout>(R.id.btnBus).setOnClickListener {
+            val url = "http://43.202.118.147:8000/bus/"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
         }
     }
 }
