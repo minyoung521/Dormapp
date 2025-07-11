@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_mainFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_dormGuideFragment"
+            app:destination="@id/dormGuideFragment" />
     </fragment>
 
     <fragment
@@ -259,6 +262,15 @@
         <action
             android:id="@+id/action_givePointFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/dormGuideFragment"
+        android:name="com.example.dormapp.DormGuideFragment"
+        android:label="생활관 안내">
+        <action
+            android:id="@+id/action_dormitoryGuideFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
 
 </navigation>

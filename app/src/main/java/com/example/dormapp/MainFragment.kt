@@ -38,6 +38,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             findNavController().navigate(R.id.action_mainFragment_to_myPageFragment)
         }
 
+        view.findViewById<LinearLayout>(R.id.btnGuide).setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_dormGuideFragment)
+        }
+
         view.findViewById<LinearLayout>(R.id.btnBus).setOnClickListener {
             val url = "http://43.202.118.147:8000/bus/"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
