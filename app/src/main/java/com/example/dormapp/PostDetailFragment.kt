@@ -36,6 +36,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         binding.rvComments.adapter = commentAdapter
 
         binding.btnLike.setOnClickListener { toggleLike() }
+
         binding.btnSendComment.setOnClickListener {
             val text = binding.etComment.text.toString().trim()
             if (text.isEmpty()) {
@@ -79,8 +80,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
                         } else {
                             binding.ivDetailImage.visibility = View.GONE
                         }
-
                         commentAdapter.updateList(post.comments.orEmpty())
+
                         binding.tvLikeCount.text = post.likeCount.toString()
                         binding.btnLike.text = if (post.isLiked) "💖 취소" else "🤍 좋아요"
                     }
@@ -114,8 +115,46 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         dialog.show()
     }
 
-    private fun toggleLike() { /* ... */ }
-    private fun addComment(content: String) { /* ... */ }
+    private fun toggleLike() {
+        RetrofitClient.create(requireContext())
+            .toggleLike(postId)
+            .enqueue(object : Callback<LikeResponse> {
+                override fun onResponse(call: Call<LikeResponse>, response: Response<LikeResponse>) {
+                    if (response.isSuccessful && response.body() != null) {
+                        val likeResponse = response.body()!!
+                        binding.tvLikeCount.text = likeResponse.likeCount.toString()
+                        binding.btnLike.text = if (likeResponse.isLiked) "💖 취소" else "🤍 좋아요"
+                    } else {
+                        Toast.makeText(requireContext(), "좋아요 실패", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                override fun onFailure(call: Call<LikeResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "네트워크 오류", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+    private fun addComment(content: String) {
+        RetrofitClient.create(requireContext())
+            .addComment(postId, mapOf("content" to content))
+            .enqueue(object : Callback<CommentResponse> {
+                override fun onResponse(
+                    call: Call<CommentResponse>,
+                    response: Response<CommentResponse>
+                ) {
+                    if (response.isSuccessful && response.body()?.success == true) {
+                        binding.etComment.text.clear()
+                        loadPostDetail()
+                        Toast.makeText(requireContext(), "댓글이 등록되었습니다.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "댓글 등록 실패", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                override fun onFailure(call: Call<CommentResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "네트워크 오류", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
