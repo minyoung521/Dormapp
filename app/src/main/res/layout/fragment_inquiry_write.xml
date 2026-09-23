@@ -24,7 +24,7 @@
         android:id="@+id/et_inquiry_title"
         android:layout_width="0dp"
         android:layout_height="45dp"
-        android:hint="제목을 입력하세요."
+        android:hint="제목을 입력하세요"
         android:background="@drawable/edit_white_border"
         android:textAlignment="center"
         android:inputType="text"
