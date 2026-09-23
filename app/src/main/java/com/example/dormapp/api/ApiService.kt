@@ -3,6 +3,7 @@ package com.example.dormapp.api
 import com.google.gson.annotations.SerializedName
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -355,20 +356,46 @@ interface ApiService {
         @Part image: MultipartBody.Part?
     ): Call<NoticeCreateResponse>
 
+    @PUT("api/notices/{id}/")
+    fun updateNotice(
+        @Header("Authorization") token: String,
+        @Path("id") noticeId: Int,
+        @Body request: Map<String, String>
+    ): Call<ResponseBody>
+
+    @DELETE("api/notices/{noticeId}/")
+    fun deleteNotice(
+        @Path("noticeId") noticeId: Int
+    ): Call<ResponseBody>
+
+    @Multipart
+    @PUT("api/notices/{id}/")
+    fun updateNoticeWithImage(
+        @Path("id") id: Int,
+        @Part("title") title: RequestBody,
+        @Part("content") content: RequestBody,
+        @Part image: MultipartBody.Part? = null
+    ): Call<NoticeCreateResponse>
+
+
+
     @GET("api/posts/") fun getPosts(): Call<PostListResponse>
     @GET("api/posts/{id}/") fun getPost(@Path("id") postId: Int): Call<PostDetailResponse>
     @POST("api/posts/") fun addPost(@Body request: PostRequest): Call<PostCreateResponse>
     @PUT("api/posts/{id}/") fun updatePost(@Path("id") postId: Int, @Body request: PostRequest): Call<PostCreateResponse>
     @DELETE("api/posts/{id}/") fun deletePost(@Path("id") postId: Int): Call<DeleteResponse>
     @Multipart
-    @POST("api/posts/") fun addPostWithImage(
+    @POST("api/posts/")
+    fun addPostWithImage(
         @Part("title") title: RequestBody,
         @Part("content") content: RequestBody,
         @Part image: MultipartBody.Part?
     ): Call<PostCreateResponse>
 
-    @POST("api/posts/{id}/comments/") fun addComment(@Path("id") postId: Int, @Body body: Map<String, String>): Call<CommentResponse>
-    @GET("api/posts/{id}/comments/") fun getComments(@Path("id") postId: Int): Call<CommentListResponse>
+    @POST("api/posts/{id}/comments/")
+    fun addComment(@Path("id") postId: Int, @Body body: Map<String, String>): Call<CommentResponse>
+    @GET("api/posts/{id}/comments/")
+    fun getComments(@Path("id") postId: Int): Call<CommentListResponse>
 
     @POST("api/posts/{id}/like/") fun toggleLike(@Path("id") id: Int): Call<LikeResponse>
 
@@ -401,4 +428,17 @@ interface ApiService {
     @DELETE("api/admin/user/{user_id}/")
     fun deleteAdminUser(@Path("user_id") userId: Int): Call<DeleteResponse>
 
+    @Multipart
+    @PUT("api/posts/{id}/")
+    fun updatePostWithImage(
+        @Path("id") postId: Int,
+        @Part("title") title: RequestBody,
+        @Part("content") content: RequestBody,
+        @Part image: MultipartBody.Part? = null
+    ): Call<PostCreateResponse>
+
+    @DELETE("api/comments/{id}/")
+    fun deleteComment(@Path("id") commentId: Int): Call<DeleteResponse>
+
 }
+

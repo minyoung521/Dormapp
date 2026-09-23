@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 노란색 둥근 버튼 -->
+    <style name="RoundedYellowButton">
+        <item name="android:background">@drawable/rounded_yellow_button</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- 빨간색 둥근 버튼 -->
+    <style name="RoundedRedButton">
+        <item name="android:background">@drawable/rounded_red_button</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+
+</resources>
+

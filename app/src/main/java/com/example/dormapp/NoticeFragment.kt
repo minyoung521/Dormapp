@@ -71,6 +71,7 @@ class NoticeFragment : Fragment(R.layout.fragment_notice) {
                 putString("title", notice.title)
                 putString("content", notice.content)
                 putString("imageUrl", notice.imageUrl ?: "")
+                putInt("noticeId", notice.id)
             }
             findNavController().navigate(
                 R.id.action_noticeFragment_to_noticeDetailFragment,

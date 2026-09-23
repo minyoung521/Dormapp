@@ -24,11 +24,11 @@ class InquiryDetailFragment : Fragment(R.layout.fragment_inquiry_detail) {
         val tvAnswerContent = view.findViewById<TextView>(R.id.tv_inquiry_answer_content)
         val etAnswer = view.findViewById<EditText>(R.id.et_inquiry_answer)
         val btnSubmitAnswer = view.findViewById<Button>(R.id.btn_submit_answer)
+        val cardAnswer = view.findViewById<View>(R.id.card_answer)  // 🔥 답변 카드뷰 컨테이너
 
         val inquiryId = arguments?.getInt("inquiryId") ?: return
 
-        val prefs = requireContext()
-            .getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        val prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE)
         val token = prefs.getString("auth_token", null)
         val isStaff = prefs.getBoolean("is_staff", false)
 
@@ -53,9 +53,11 @@ class InquiryDetailFragment : Fragment(R.layout.fragment_inquiry_detail) {
                         tvAnswerLabel.visibility = View.VISIBLE
                         tvAnswerContent.visibility = View.VISIBLE
                         tvAnswerContent.text = data.answer.answer
+                        cardAnswer.visibility = View.VISIBLE  // ✅ 카드도 함께 보이게
                         etAnswer.visibility = View.GONE
                         btnSubmitAnswer.visibility = View.GONE
                     } else {
+                        cardAnswer.visibility = View.GONE  // ✅ 없을 땐 감추기
                         if (isStaff) {
                             etAnswer.visibility = View.VISIBLE
                             btnSubmitAnswer.visibility = View.VISIBLE
@@ -68,6 +70,7 @@ class InquiryDetailFragment : Fragment(R.layout.fragment_inquiry_detail) {
                                     Toast.makeText(requireContext(), "답변을 입력하세요", Toast.LENGTH_SHORT).show()
                                     return@setOnClickListener
                                 }
+
                                 api.answerInquiry(inquiryId, InquiryAnswerRequest(answerText))
                                     .enqueue(object : Callback<InquiryAnswerResponse> {
                                         override fun onResponse(
@@ -81,6 +84,7 @@ class InquiryDetailFragment : Fragment(R.layout.fragment_inquiry_detail) {
                                                 Toast.makeText(requireContext(), "답변 등록 실패", Toast.LENGTH_SHORT).show()
                                             }
                                         }
+
                                         override fun onFailure(call: Call<InquiryAnswerResponse>, t: Throwable) {
                                             Toast.makeText(
                                                 requireContext(),
@@ -101,6 +105,7 @@ class InquiryDetailFragment : Fragment(R.layout.fragment_inquiry_detail) {
                     Toast.makeText(requireContext(), "문의 상세 조회 실패", Toast.LENGTH_SHORT).show()
                 }
             }
+
             override fun onFailure(call: Call<InquiryDetailResponse>, t: Throwable) {
                 Toast.makeText(
                     requireContext(),

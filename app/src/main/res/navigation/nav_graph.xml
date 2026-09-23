@@ -201,10 +201,17 @@
         <argument
             android:name="content"
             app:argType="string" />
+        <argument
+            android:name="imageUrl"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true" />
+
         <action
             android:id="@+id/action_postEditFragment_to_postDetailFragment"
             app:destination="@id/postDetailFragment" />
     </fragment>
+
 
     <fragment
         android:id="@+id/menuFragment"

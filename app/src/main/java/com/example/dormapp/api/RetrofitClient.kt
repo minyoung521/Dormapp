@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    const val BASE_URL = "http://43.202.118.147:8000/"
+    const val BASE_URL = "http://43.203.234.235:8000/"
 
     private fun authInterceptor(context: Context): Interceptor = Interceptor { chain ->
         val original = chain.request()
@@ -22,8 +22,8 @@ object RetrofitClient {
         }
 
         val builder = original.newBuilder()
-        if (!token.isNullOrEmpty()) {
-            builder.addHeader("Authorization", "Token $token")
+        if (!token.isNullOrBlank()) {
+            builder.addHeader("Authorization", "Token ${token.trim()}")
         }
         chain.proceed(builder.build())
     }
@@ -35,6 +35,27 @@ object RetrofitClient {
     fun create(context: Context): ApiService {
         val client = OkHttpClient.Builder()
             .addInterceptor(authInterceptor(context))
+            .addInterceptor(loggingInterceptor)
+            .build()
+
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+    }
+
+    fun createWithHeader(authHeader: String): ApiService {
+        val headerInterceptor = Interceptor { chain ->
+            val newRequest = chain.request().newBuilder()
+                .addHeader("Authorization", authHeader)
+                .build()
+            chain.proceed(newRequest)
+        }
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(headerInterceptor)
             .addInterceptor(loggingInterceptor)
             .build()
 
